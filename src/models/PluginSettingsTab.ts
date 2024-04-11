@@ -262,7 +262,7 @@ export class PluginSettingsTab extends PluginSettingTab {
 				.onChange(async (value) => {
 					let numValue: number = Number.parseInt(value)
 					if (isNaN(numValue) || numValue < 0) {
-						numValue = -1
+						numValue = 0
 					}
 					this.plugin.settings.startingHeight = numValue
 					await this.plugin.saveSettings()
