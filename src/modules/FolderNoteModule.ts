@@ -81,8 +81,10 @@ export class FolderNoteModule {
 			indexFilePath = this.plugin.settings.rootIndexFile
 		}
 
-		// Create the File if it doesn't exist and isn't excluded, then open it
-		if (!this.doesFileExist(indexFilePath) && (folderName == null || !this.plugin.settings.excludeFolders.includes(folderName))) {
+		let height = dataPath.split("/").length -1 // Splits String into Array and uses .lenght to get count of "/"
+
+		// Create the File if it doesn't exist, isn't excluded and is at or below the starting height, then open it
+		if (!this.doesFileExist(indexFilePath) && (folderName == null || !this.plugin.settings.excludeFolders.includes(folderName)) && height>=this.plugin.settings.startingHeight) {
 			if (await this.createIndexFile(indexFilePath)) {
 				await this.openIndexFile(indexFilePath)
 			}
@@ -107,7 +109,7 @@ export class FolderNoteModule {
 	}
 
 	private async createIndexFile(path: string) {
-		if (isExcludedPath(path))
+		if (isExcludedPath(path)) // Is this nessecary, since exclusion added in OnClick()?
 			return false
 		if (this.plugin.settings.autoCreateIndexFile) {
 			const name = path.split(/\//).last()

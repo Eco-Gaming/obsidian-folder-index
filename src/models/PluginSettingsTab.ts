@@ -20,6 +20,7 @@ export interface PluginSetting {
 	useBulletPoints: boolean;
 	excludeFolders: string[];
 	recursionLimit: number;
+	startingHeight: number, 
 	headlineLimit: number;
 }
 
@@ -42,6 +43,7 @@ export const DEFAULT_SETTINGS: PluginSetting = {
 	useBulletPoints: false,
 	excludeFolders: [],
 	recursionLimit: -1,
+	startingHeight: 0,
 	headlineLimit: 6,
 }
 
@@ -249,6 +251,20 @@ export class PluginSettingsTab extends PluginSettingTab {
 						numValue = -1
 					}
 					this.plugin.settings.recursionLimit = numValue
+					await this.plugin.saveSettings()
+				}))
+
+		new Setting(containerEl)
+			.setName("Starting Folder Height")
+			.setDesc("Set the Height at which the Indeizes are first created")
+			.addText(component => component.setValue(this.plugin.settings.startingHeight.toString())
+				.setPlaceholder("0")
+				.onChange(async (value) => {
+					let numValue: number = Number.parseInt(value)
+					if (isNaN(numValue) || numValue < 0) {
+						numValue = -1
+					}
+					this.plugin.settings.startingHeight = numValue
 					await this.plugin.saveSettings()
 				}))
 
