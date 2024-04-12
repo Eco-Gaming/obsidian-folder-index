@@ -20,7 +20,7 @@ export interface PluginSetting {
 	useBulletPoints: boolean;
 	excludeFolders: string[];
 	recursionLimit: number;
-	startingHeight: number, 
+	startingDepth: number, 
 	headlineLimit: number;
 }
 
@@ -43,7 +43,7 @@ export const DEFAULT_SETTINGS: PluginSetting = {
 	useBulletPoints: false,
 	excludeFolders: [],
 	recursionLimit: -1,
-	startingHeight: 0,
+	startingDepth: 0,
 	headlineLimit: 6,
 }
 
@@ -255,16 +255,16 @@ export class PluginSettingsTab extends PluginSettingTab {
 				}))
 
 		new Setting(containerEl)
-			.setName("Starting Folder Height")
-			.setDesc("Set the Height at which the Indeizes are first created")
-			.addText(component => component.setValue(this.plugin.settings.startingHeight.toString())
+			.setName("Starting Folder Depth")
+			.setDesc("Set the minimal Depth at which the IndexFiles are created")
+			.addText(component => component.setValue(this.plugin.settings.startingDepth.toString())
 				.setPlaceholder("0")
 				.onChange(async (value) => {
 					let numValue: number = Number.parseInt(value)
 					if (isNaN(numValue) || numValue < 0) {
 						numValue = 0
 					}
-					this.plugin.settings.startingHeight = numValue
+					this.plugin.settings.startingDepth = numValue
 					await this.plugin.saveSettings()
 				}))
 

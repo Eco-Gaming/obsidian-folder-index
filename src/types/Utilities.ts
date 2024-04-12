@@ -1,5 +1,6 @@
 import {TFile} from "obsidian";
 import FolderIndexPlugin from "../main";
+import * as typescriptPath from "path";
 
 export function isIndexFileWithFile(file: TFile) {
 	return isIndexFile(file.path)
@@ -26,4 +27,15 @@ export function isExcludedPath(path: string) {
 			return true;
 	}
 	return false
+}
+
+export function checkDepth(path: string) {
+
+	// TODO: finish function
+
+	// Use path module to determine path depth, by counting the number of directory separators
+	const parsedPath = typescriptPath.parse(path);
+	const depth = parsedPath.dir.split(typescriptPath.sep).length - 1;
+
+	return depth >= FolderIndexPlugin.PLUGIN.settings.startingDepth
 }

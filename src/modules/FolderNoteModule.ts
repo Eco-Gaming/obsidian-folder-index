@@ -1,6 +1,6 @@
 import {App, Notice, TAbstractFile, TFile, TFolder, ViewState} from "obsidian";
 import FolderIndexPlugin from "../main";
-import {isExcludedPath, isIndexFile} from "../types/Utilities";
+import {isExcludedPath, isIndexFile, checkDepth} from "../types/Utilities";
 
 export class FolderNoteModule {
 	viewModeByPlugin = false;
@@ -81,10 +81,8 @@ export class FolderNoteModule {
 			indexFilePath = this.plugin.settings.rootIndexFile
 		}
 
-		let height = dataPath.split("/").length -1 // Splits String into Array and uses .lenght to get count of "/"
-
-		// Create the File if it doesn't exist, isn't excluded and is at or below the starting height, then open it
-		if (!this.doesFileExist(indexFilePath) && (folderName == null || !this.plugin.settings.excludeFolders.includes(folderName)) && height>=this.plugin.settings.startingHeight) {
+		// Create the File if it doesn't exist and open it
+		if (!this.doesFileExist(indexFilePath)) {
 			if (await this.createIndexFile(indexFilePath)) {
 				await this.openIndexFile(indexFilePath)
 			}
@@ -109,7 +107,7 @@ export class FolderNoteModule {
 	}
 
 	private async createIndexFile(path: string) {
-		if (isExcludedPath(path)) // Is this nessecary, since exclusion added in OnClick()?
+		if (isExcludedPath(path) || checkDepth(path))
 			return false
 		if (this.plugin.settings.autoCreateIndexFile) {
 			const name = path.split(/\//).last()
